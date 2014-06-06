@@ -15,7 +15,7 @@
           (make-instance 'pitch :pc (+ root-pc 4) :octave (+ root-oct 2))
           (make-instance 'pitch :pc (+ root-pc 10) :octave (+ root-oct 2))
           (make-instance 'pitch :pc (+ root-pc 2) :octave (+ root-oct 3))
-          (make-instance 'pitch :pc (+ root-pc 5) :octave (+ root-oct 3))
+          (make-instance 'pitch :pc (+ root-pc 6) :octave (+ root-oct 3))
           (make-instance 'pitch :pc (+ root-pc 8) :octave (+ root-oct 3)))))
 
 (defun dur-extr-fun (x)
@@ -77,20 +77,20 @@
     (set-curr-time time)
     (let* ((chord-n (next chord-dc))
           (d (next dur-dc))
-          (p (if (= rest-count 0)
-                 (progn
-                   (setf rest-count (next rest-dc))
-                   nil)
-                 (progn
-                   (decf rest-count)
-                   (if (= chord-n 1)
-                       (next pitch-dc)
-                       (list (next pitch-dc)
-                             (next pitch-dc)))))))
+          (p (cond ((= rest-count 0)
+                    (setf rest-count (next rest-dc))
+                    nil)
+                   (t
+                    (decf rest-count)
+                    (if (= chord-n 1)
+                        (next pitch-dc)
+                        (list (next pitch-dc)
+                              (next pitch-dc)))))))
       (incf time d)
       (add-note pc-line (make-instance 'note :pitch p
                                        :mult d
-                                       :dynamic (next dyn-dc))))))
+                                       :dynamic (if p (next dyn-dc))
+                                       :base (base pc-line))))))
 
 (let ((pc-lines nil)
       (total-dur)

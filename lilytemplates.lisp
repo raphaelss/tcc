@@ -70,7 +70,7 @@
                    "\\times 4/6 {~a8~a" ;.2
                    "\\times 4/6 {~a8.~a" ;.3
                    "\\times 4/6 {~a4~a" ;.4
-                   "\\times 4/6 {~a8.~a~[~~~] ~0@*~a8" ;.5!!!
+                   "\\times 4/6 {~a4~a~[~~~] ~0@*~a16" ;.5!!!
                    "~a4~a" ;.6
                    "~a4~a~[~~~] \\times 4/6 {~0@*~a16" ;.7
                    "~a4~a~[~~~] \\times 4/6 {~0@*~a8" ;.8
@@ -117,4 +117,40 @@
                    "~a2.~a~[~~~] \\times 4/7 {~0@*~a4" ;.25
                    "~a2.~a~[~~~] \\times 4/7 {~0@*~a4~*~[~~~] ~0@*~a16" ;.26
                    "~a2.~a~[~~~] \\times 4/7 {~0@*~a4." ;.27
-                   "a1~a"))) ;.28
+                   "~a1~a"))) ;.28
+
+(defparameter *lily-version* "\\version \"2.18.2\"")
+(defparameter *lily-include* "\\include \"~a\"")
+(defparameter *score-header* "#(set-global-staff-size 17)
+\\book {
+  \\paper {
+    #(set-paper-size \"a3\" 'portrait)
+    indent = 3.0\\cm
+    short-indent = 1.5\\cm
+    %top-margin = 20\mm
+    %bottom-margin = 20\mm
+    %left-margin = 25\mm
+    %right-margin = 20\mm
+  }
+  \\header {
+    title = \"~a\"
+    subtitle = \"~a\"
+    subsubtitle = \"~a\"
+    composer = \"Raphael Santos\"
+    opus = \"(2014)\"
+    tagline = ##f
+  }
+  \\score {
+    <<~%")
+(defparameter *score-footer* "    >>~%    \\layout {}~%    \\midi {}~%  }~%}")
+(defparameter *group-header* "      \\new StaffGroup = \"~a\" <<~%")
+(defparameter *group-footer* "      >>~%")
+(defparameter *inline-line* "        \\new Staff {
+          \\set Staff.instrumentName = #\"~a\"
+          \\set Staff.shortInstrumentName = #\"~a\"
+          \\set Staff.midiInstrument = #\"~a\"
+          \\new Voice {~%            \\~a
+          }~%        }~%")
+
+(defparameter *line-file-header* "~a = {~%")
+(defparameter *line-file-footer* "}")

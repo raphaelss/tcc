@@ -16,6 +16,13 @@
 
 (defun print-header (stream)
   (format stream "\\version \"2.18.2\"~%~%~
+#(set-global-staff-size 17)
+\\paper {
+  #(set-paper-size \"a3\")
+  indent = 3.0\\cm
+  short-indent = 1.5\\cm
+}
+
 \\score {~%~:
   \\new StaffGroup <<~%"))
 
@@ -40,7 +47,7 @@
     (dolist (note (reverse (notes line)))
       (format stream "        ")
       (setf (values bar-left tuplet-left)
-            (print-note stream note base bar bar-left tuplet-left))
+            (print-note stream note bar bar-left tuplet-left))
       (format stream "~%"))
     (if (and (/= base 2 4) (/= tuplet-left 0))
         (format stream "        }~%")))

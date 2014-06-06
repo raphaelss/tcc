@@ -20,7 +20,11 @@
    (mult
     :initarg :mult
     :initform 1
-    :accessor mult)))
+    :accessor mult)
+   (base
+    :initarg :base
+    :initform 2
+    :accessor base)))
 
 (defmethod initialize-instance :after ((p pitch) &key)
   (let ((pc (pc p)))
@@ -120,8 +124,9 @@
     (format stream " ")
     (setf dyn-m nil)))
 
-(defun print-note (stream note base bar bar-left tuplet-left)
-  (print-note-impl stream (gen-pitch-repr (pitch note))
-                   (dynamic note) base (mult note)
-                   (min (* bar base) (* 4 base))
-                   bar-left tuplet-left))
+(defun print-note (stream note bar bar-left tuplet-left)
+  (let ((base (base note)))
+    (print-note-impl stream (gen-pitch-repr (pitch note))
+                     (dynamic note) base (mult note)
+                     (min (* bar base) (* 4 base))
+                     bar-left tuplet-left)))
