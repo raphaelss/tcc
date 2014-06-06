@@ -30,13 +30,19 @@
 (defun rest-extr-fun (x)
   (/ x 100))
 
+(defun dyn-extr-fun (x)
+  (declare (ignore x))
+  0)
+
 (defun gen-line (time-pos base dur-elems root total-dur label chord-n-elems
-                 rest-elems &key (offset 0) (dur-alpha 2) (rest-alpha 2)
-                              (pitch-alpha 2) (chord-alpha 2)
-                              (dur-extr-fun #'dur-extr-fun)
-                              (pitch-extr-fun #'pitch-extr-fun)
-                              (chord-extr-fun #'chord-extr-fun)
-                              (rest-extr-fun #'rest-extr-fun))
+                 rest-elems dyn-elems
+                 &key (offset 0) (dur-alpha 2) (rest-alpha 2)
+                   (pitch-alpha 2) (chord-alpha 2) (dyn-alpha 2)
+                   (dur-extr-fun #'dur-extr-fun)
+                   (pitch-extr-fun #'pitch-extr-fun)
+                   (chord-extr-fun #'chord-extr-fun)
+                   (rest-extr-fun #'rest-extr-fun)
+                   (dyn-extr-fun #'dyn-extr-fun))
   (do* ((scaled-time-pos (* time-pos base))
         (dur-dc (make-instance 'diss-counter
                                :elems dur-elems
@@ -58,6 +64,11 @@
                                 :prob-fun (timed-prob-fun scaled-time-pos
                                                           rest-alpha
                                                           rest-extr-fun)))
+        (dyn-dc (make-instance 'diss-counter
+                               :elems dyn-elems
+                               :prob-fun (timed-prob-fun scaled-time-pos
+                                                         dyn-alpha
+                                                         dyn-extr-fun)))
         (time offset)
         (n-units (* base total-dur))
         (pc-line (make-instance 'poly-cont-line :base base :label label))
@@ -73,26 +84,31 @@
                  (progn
                    (decf rest-count)
                    (if (= chord-n 1)
-                       (list (next pitch-dc))
+                       (next pitch-dc)
                        (list (next pitch-dc)
                              (next pitch-dc)))))))
       (incf time d)
-      (add-note pc-line (make-instance 'note :pitch p :mult d)))))
+      (add-note pc-line (make-instance 'note :pitch p
+                                       :mult d
+                                       :dynamic (next dyn-dc))))))
 
 (let ((pc-lines nil)
       (total-dur)
       (dur-elems)
       (chord-n-elems)
       (rest-elems)
+      (dyn-elems)
       (bar 4)
       (rest-alpha 2)
       (pitch-alpha 2)
       (dur-alpha 2)
       (chord-alpha 2)
+      (dyn-alpha 2)
       (dur-extr-fun #'dur-extr-fun)
       (pitch-extr-fun #'pitch-extr-fun)
       (chord-extr-fun #'chord-extr-fun)
-      (rest-extr-fun #'rest-extr-fun))
+      (rest-extr-fun #'rest-extr-fun)
+      (dyn-extr-fun #'dyn-extr-fun))
   (defun total-dur (x)
     (setf total-dur x))
   (defun bar (x)
@@ -103,6 +119,8 @@
     (setf rest-elems x))
   (defun dur-elems (x)
     (setf dur-elems x))
+  (defun dyn-elems (x)
+    (setf dyn-elems x))
   (defun dur-alpha (x)
     (setf dur-alpha x))
   (defun rest-alpha (x)
@@ -111,6 +129,8 @@
     (setf pitch-alpha x))
   (defun chord-alpha (x)
     (setf chord-alpha x))
+  (defun dyn-alpha (x)
+    (setf dyn-alpha x))
   (defun set-dur-extr-fun (x)
     (setf dur-extr-fun x))
   (defun set-pitch-extr-fun (x)
@@ -119,6 +139,8 @@
     (setf chord-extr-fun x))
   (defun set-rest-extr-fun (x)
     (setf rest-extr-fun x))
+  (defun set-dyn-extr-fun (x)
+    (setf dyn-extr-fun x))
   (defun make-lines (specs)
     (setf pc-lines nil)
     (let ((i 1))
@@ -129,13 +151,16 @@
           (push (gen-line time-pos base dur-elems root total-dur i
                           chord-n-elems
                           rest-elems
+                          dyn-elems
                           :dur-alpha dur-alpha
                           :pitch-alpha pitch-alpha
                           :rest-alpha rest-alpha
+                          :dyn-alpha dyn-alpha
                           :dur-extr-fun dur-extr-fun
                           :pitch-extr-fun pitch-extr-fun
                           :chord-extr-fun chord-extr-fun
-                          :rest-extr-fun rest-extr-fun)
+                          :rest-extr-fun rest-extr-fun
+                          :dyn-extr-fun dyn-extr-fun)
                 pc-lines)
           (incf i)))
       (setf pc-lines (nreverse pc-lines))))

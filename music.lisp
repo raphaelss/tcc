@@ -26,7 +26,7 @@
   (format stream "    \\new Staff {~%~:
       \\set Staff.instrumentName = #\"Linha ~a\"~%~:
       \\set Staff.shortInstrumentName = #\"~a\"~%~:
-      \\new Voice {~%        \\time ~a/4~%        " label label bar))
+      \\new Voice {~%        \\time ~a/4~%" label label bar))
 
 (defun print-line-footer (stream)
   (format stream "      }~%    }~%"))
@@ -38,12 +38,12 @@
          (bar-left bar)
          (tuplet-left 0))
     (dolist (note (reverse (notes line)))
+      (format stream "        ")
       (setf (values bar-left tuplet-left)
             (print-note stream note base bar bar-left tuplet-left))
-      (format stream " "))
+      (format stream "~%"))
     (if (and (/= base 2 4) (/= tuplet-left 0))
-        (format stream "}")))
-  (format stream "~%")
+        (format stream "        }~%")))
   (print-line-footer stream))
 
 (defun print-poly-cont (stream bar poly-cont)
