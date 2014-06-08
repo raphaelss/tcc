@@ -77,7 +77,7 @@
   (push note (notes line))
   (update-line-state line note))
 
-(defun line-add-note (line note beat in-tuplet)
+(defun add-note (line note beat in-tuplet)
   (let ((line-beat (beat-n line))
         (line-in-tuplet (in-tuplet line))
         (base (base note)))
