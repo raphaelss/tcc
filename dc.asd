@@ -7,7 +7,7 @@
   :license "MIT License"
   :components ((:file "lilytemplates")
                (:file "note" :depends-on ("lilytemplates"))
-               (:file "instruments")
+               (:file "instruments" :depends-on ("note"))
                (:file "line"
                       :depends-on ("lilytemplates" "instruments" "note"))
                (:file "music" :depends-on ("note"))

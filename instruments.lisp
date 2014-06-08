@@ -34,8 +34,20 @@
                                            (alto "alto")
                                            (bass8h "\"bass^8\"")
                                            (bass "bass")
-                                           (bass8l "\"bass_8\""))))))
-        list))
+                                           (bass8l "\"bass_8\"")))))) list))
+
+(defun instr-able-pitch (instr p)
+  (if p
+      (let ((pc (pc p))
+            (oct (octave p))
+            (p1 (min-pitch instr))
+            (p2 (max-pitch instr))
+            (result nil))
+        (dotimes (i (- 9 oct) (nreverse result))
+          (let ((cur-oct (+ oct i)))
+            (if (pitch-in-range (make-pitch (cons pc (+ oct i))) p1 p2)
+                (push cur-oct result)))))
+      t))
 
 (load-instruments
  #(piccolo "piccolo" 6 (2 . 5) (9 . 7) treble8h)

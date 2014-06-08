@@ -88,3 +88,16 @@
         (push g groups)))
     (setf (groups sco) (reverse groups))
     sco))
+
+(defun split-label (label)
+  (let ((pos (position #\/ label)))
+    (values (subseq label 0 pos) (subseq label (+ pos 1)))))
+
+(defun score-get-line (score label)
+  (multiple-value-bind (group-label line-label) (split-label label)
+    (let ((group (find group-label (groups score) :test #'equal :key #'label)))
+      (if group
+          (find line-label (lines group) :test #'equal :key #'label)))))
+
+(defun score-apply (score label fun &rest args)
+  (apply fun (score-get-line score label) args))

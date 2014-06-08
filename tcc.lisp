@@ -98,7 +98,6 @@
       (chord-n-elems)
       (rest-elems)
       (dyn-elems)
-      (bar 4)
       (rest-alpha 2)
       (pitch-alpha 2)
       (dur-alpha 2)
@@ -111,8 +110,6 @@
       (dyn-extr-fun #'dyn-extr-fun))
   (defun total-dur (x)
     (setf total-dur x))
-  (defun bar (x)
-    (setf bar x))
   (defun chord-n-elems (x)
     (setf chord-n-elems x))
   (defun rest-elems (x)
@@ -171,5 +168,5 @@
                          :direction :output
                          :if-exists :supersede
                          :if-does-not-exist :create)
-          (print-poly-cont file-stream bar pc-lines))
-        (print-poly-cont stream bar pc-lines))))
+          (print-poly-cont file-stream pc-lines))
+        (print-poly-cont stream pc-lines))))

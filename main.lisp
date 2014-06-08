@@ -1,9 +1,8 @@
 (require 'asdf)
-(push "~/work/tcc/lisp/" asdf:*central-registry*)
+(setf asdf:*central-registry* '("~/work/tcc/lisp/"))
 (asdf:load-system 'dc)
 
 (total-dur 600)
-(bar 4)
 (set-dur-extr-fun #'(lambda (x) (/ (/ 1 x) 10)))
 (set-pitch-extr-fun #'(lambda (x) (/ (/ 1 (+ (pc x) 1)) 100)))
 (set-chord-extr-fun #'(lambda (x) (/ x 100)))
