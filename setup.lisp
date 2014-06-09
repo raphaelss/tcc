@@ -26,6 +26,8 @@
                   ("tromboneii" "Trombone II" "Trmb. II" trombone)
                   ("basstrombone" "Bass Trombone" "Bass Trmb." trombone)
                   ("tuba" "Tuba" "Tba." tuba))
+                 ("solo"
+                  ("violin" "Solo Violin" "Solo Vln." violin-i))
                  ("string"
                   ("violinia" "Violin Ia" "Vln. Ia" violin-i)
                   ("violinib" "Violin Ib" "Vln. Ib" violin-i)
@@ -62,27 +64,35 @@
           (make-instance 'pitch :pc (+ root-pc 6) :octave (+ root-oct 3))
           (make-instance 'pitch :pc (+ root-pc 8) :octave (+ root-oct 3)))))
 
-(defun all-instr-fun (label)
-  (if (able-to-play label) 1 0))
+(defun minus-solo ()
+  #'(lambda (label) (if (and (not (search "solo" label))
+                             (able-to-play label)) 1 0)))
+
+(defun all-instr ()
+  #'(lambda (label) (if (able-to-play label) 1 0)))
 
 (defun from-group (group-label)
   #'(lambda (label)
       (if (and (equal (search group-label label) 0) (able-to-play label)) 1 0)))
 
+(defun from-list (list)
+  #'(lambda (label)
+      (if (and (member label list :test #'equal) (able-to-play label)) 1 0)))
+
 (defparameter *line*
   (vector
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
-   (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))
+   (timed-dc (score-all-labels *score*) 2 (minus-solo))))
 
 (defparameter *dyn*
   (vector
