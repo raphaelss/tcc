@@ -2,7 +2,7 @@
 (setf asdf:*central-registry* '("~/work/tcc/lisp/"))
 (asdf:load-system 'dc)
 
-(defscore :title "Concerto" :subtitle "Teste")
+(setf *score-title* "Teste")
 
 ;;Sec 1
 (active-state 0 nil)

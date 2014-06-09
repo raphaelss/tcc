@@ -1,44 +1,47 @@
-(defun defscore (&key (title "") (subtitle "") (subsubtitle ""))
-  (setf *score* (make-score
-                 :title title
-                 :subtitle subtitle
-                 :subsubtitle subsubtitle
-                 :spec
-                 '(("woodwind"
-                    ("piccolo" "Piccolo" "Picc." piccolo)
-                    ("flutei" "Flute I" "Fl. I" flute)
-                    ("fluteii" "Flute II" "Fl. II" flute)
-                    ("oboei" "Oboe I" "Ob. I" oboe)
-                    ("oboeii" "Oboe II" "Ob. II" oboe)
-                    ("enghorn" "Eng. Horn" "Eng. Hn." eng-horn)
-                    ("clarineti" "Clarinet Bb I" "Cl. Bb I" clarinet)
-                    ("clarinetii" "Clarinet Bb II" "Cl. Bb II" clarinet)
-                    ("bassclarinet" "Bass Clarinet" "Bass Cl." bass-clarinet)
-                    ("bassooni" "Bassoon I" "Bsn. I" bassoon)
-                    ("bassoonii" "Bassoon II" "Bsn. II" bassoon)
-                    ("contrabassoon" "Contrabassoon" "Cbsn." contrabassoon))
-                   ("brass"
-                    ("horni" "French Horn I" "Fr. Hrn. I" f-horn)
-                    ("hornii" "French Horn II" "Fr. Hrn. II" f-horn)
-                    ("horniii" "French Horn III" "Fr. Hrn. III" f-horn)
-                    ("horniv" "French Horn IV" "Fr. Hrn. IV" f-horn)
-                    ("trumpeti" "Trumpet I" "Trpt. I" trumpet)
-                    ("trumpetii" "Trumpet II" "Trpt. II" trumpet)
-                    ("trumpetiii" "Trumpet III" "Trpt. III" trumpet)
-                    ("trombonei" "Trombone I" "Trmb. I" trombone)
-                    ("tromboneii" "Trombone II" "Trmb. II" trombone)
-                    ("basstrombone" "Bass Trombone" "Bass Trmb." trombone)
-                    ("tuba" "Tuba" "Tba." tuba))
-                   ("string"
-                    ("violinia" "Violin Ia" "Vln. Ia" violin-i)
-                    ("violinib" "Violin Ib" "Vln. Ib" violin-i)
-                    ("violiniia" "Violin IIa" "Vln. IIa" violin-ii)
-                    ("violiniib" "Violin IIb" "Vln. IIb" violin-ii)
-                    ("violaa" "Viola a" "Vla. a" viola)
-                    ("violab" "Viola b" "Vla. b" viola)
-                    ("celloa" "Cello a" "Vlc. a" cello)
-                    ("cellob" "Cello b" "Vlc. b" cello)
-                    ("bass" "Bass" "Bass" bass))))))
+(defparameter *score-title* "")
+(defparameter *score-subtitle* "")
+(defparameter *score-subsubtitle* "")
+
+(setf *score* (make-score
+               :title *score-title*
+               :subtitle *score-subtitle*
+               :subsubtitle *score-subsubtitle*
+               :spec
+               '(("woodwind"
+                  ("piccolo" "Piccolo" "Picc." piccolo)
+                  ("flutei" "Flute I" "Fl. I" flute)
+                  ("fluteii" "Flute II" "Fl. II" flute)
+                  ("oboei" "Oboe I" "Ob. I" oboe)
+                  ("oboeii" "Oboe II" "Ob. II" oboe)
+                  ("enghorn" "Eng. Horn" "Eng. Hn." eng-horn)
+                  ("clarineti" "Clarinet Bb I" "Cl. Bb I" clarinet)
+                  ("clarinetii" "Clarinet Bb II" "Cl. Bb II" clarinet)
+                  ("bassclarinet" "Bass Clarinet" "Bass Cl." bass-clarinet)
+                  ("bassooni" "Bassoon I" "Bsn. I" bassoon)
+                  ("bassoonii" "Bassoon II" "Bsn. II" bassoon)
+                  ("contrabassoon" "Contrabassoon" "Cbsn." contrabassoon))
+                 ("brass"
+                  ("horni" "French Horn I" "Fr. Hrn. I" f-horn)
+                  ("hornii" "French Horn II" "Fr. Hrn. II" f-horn)
+                  ("horniii" "French Horn III" "Fr. Hrn. III" f-horn)
+                  ("horniv" "French Horn IV" "Fr. Hrn. IV" f-horn)
+                  ("trumpeti" "Trumpet I" "Trpt. I" trumpet)
+                  ("trumpetii" "Trumpet II" "Trpt. II" trumpet)
+                  ("trumpetiii" "Trumpet III" "Trpt. III" trumpet)
+                  ("trombonei" "Trombone I" "Trmb. I" trombone)
+                  ("tromboneii" "Trombone II" "Trmb. II" trombone)
+                  ("basstrombone" "Bass Trombone" "Bass Trmb." trombone)
+                  ("tuba" "Tuba" "Tba." tuba))
+                 ("string"
+                  ("violinia" "Violin Ia" "Vln. Ia" violin-i)
+                  ("violinib" "Violin Ib" "Vln. Ib" violin-i)
+                  ("violiniia" "Violin IIa" "Vln. IIa" violin-ii)
+                  ("violiniib" "Violin IIb" "Vln. IIb" violin-ii)
+                  ("violaa" "Viola a" "Vla. a" viola)
+                  ("violab" "Viola b" "Vla. b" viola)
+                  ("celloa" "Cello a" "Vlc. a" cello)
+                  ("cellob" "Cello b" "Vlc. b" cello)
+                  ("bass" "Bass" "Bass" bass)))))
 
 (defparameter *dur-all* (list 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
                               20 21 22 23 24 25 26 27 28))
