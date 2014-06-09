@@ -2,9 +2,11 @@
 (setf asdf:*central-registry* '("~/work/tcc/lisp/"))
 (asdf:load-system 'dc)
 
+(setf *random-state* (make-random-state t))
+
 (set-title "Teste")
 
-;;Sec 1
+;;Sec x
 (dotimes (i 12)
   (active-state i t))
 (run-until *gen-line-list* 60)
@@ -17,12 +19,13 @@
 (active-state 4 nil)
 (active-state 5 nil)
 (active-state 6 t)
+(active-state 7 nil)
 (active-state 8 nil)
 (active-state 9 nil)
 (active-state 10 nil)
 (active-state 11 nil)
-
+(set-prob-fun 'line 0 (from-group "string"))
+(set-prob-fun 'line 6 (from-group "string"))
 (run-until *gen-line-list* 90)
-
 
 (print-score "~/work/tcc/tests/scotst.ly" *score*)

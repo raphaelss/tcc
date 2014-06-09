@@ -65,6 +65,10 @@
 (defun all-instr-fun (label)
   (if (able-to-play label) 1 0))
 
+(defun from-group (group-label)
+  #'(lambda (label)
+      (if (and (equal (search group-label label) 0) (able-to-play label)) 1 0)))
+
 (defparameter *line*
   (vector
    (timed-dc (score-all-labels *score*) 2 #'all-instr-fun)
@@ -151,7 +155,7 @@
 
 (defun set-prob-fun (which id f &optional (alpha 2))
   (case which
-    (dynamic (setf (aref *dyn* id) (wrap-dc-fun alpha f)))
-    (dur (setf (aref *dur* id) (wrap-dc-fun alpha f)))
-    (pitch (setf (aref *pitch* id) (wrap-dc-fun alpha f)))
-    (line (setf (aref *line* id) (wrap-dc-fun alpha f)))))
+    (dynamic (setf (prob-fun (aref *dyn* id)) (wrap-dc-fun alpha f)))
+    (dur (setf (prob-fun (aref *dur* id)) (wrap-dc-fun alpha f)))
+    (pitch (setf (prob-fun (aref *pitch* id)) (wrap-dc-fun alpha f)))
+    (line (setf (prob-fun (aref *line* id)) (wrap-dc-fun alpha f)))))
