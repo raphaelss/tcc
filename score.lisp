@@ -101,3 +101,10 @@
 
 (defun score-apply (score label fun &rest args)
   (apply fun (score-get-line score label) args))
+
+(defun score-all-labels (score)
+  (let ((result nil))
+    (dolist (g (groups score) result)
+      (let ((g-label (label g)))
+        (dolist (l (lines g))
+          (push (format nil "~a/~a" g-label (label l)) result))))))
