@@ -10,9 +10,7 @@
                (:file "instruments" :depends-on ("note"))
                (:file "line" :depends-on
                       ("lilytemplates" "instruments" "note"))
-;               (:file "music" :depends-on ("note"))
                (:file "score" :depends-on ("lilytemplates" "line"))
                (:file "disscounter")
                (:file "genline" :depends-on
                       ("disscounter" "score" "note" "line"))))
-;               (:file "tcc" :depends-on ("score" "music" "disscounter"))))
