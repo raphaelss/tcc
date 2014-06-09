@@ -40,7 +40,7 @@
 (defparameter *dur-all* (list 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
                               20 21 22 23 24 25 26 27 28))
 
-(defparameter *dyn-all* (list 'ppp 'pp 'p 'mp 'mf 'f 'ff 'fff))
+(defparameter *dyn-all* (list 'ppp 'pp 'p 'mp 'mf 'f ));'ff 'fff))
 
 (defun set-title (x)
   (setf (title *score*) x))

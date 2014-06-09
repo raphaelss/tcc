@@ -124,8 +124,11 @@
           pc (dynamic-repr dyn) (if (equal pc "r") 1 0)))
 
 (defun write-figure (stream pc dyn base mult)
-  (format stream (aref (aref *mult-fig* (- base 2)) (- mult 1))
-          pc (dynamic-repr dyn) (if (equal pc "r") 1 0)))
+  (let ((to-print (format nil (aref (aref *mult-fig* (- base 2)) (- mult 1))
+                          pc (dynamic-repr dyn) (if (equal pc "r") 1 0))))
+    (if (equal to-print "r1")
+        (format stream "R1")
+        (format stream "~a" to-print))))
 
 (defun calc-tuplet-left (base x)
   (mod (- base (mod x base)) base))
