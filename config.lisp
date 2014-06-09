@@ -2,6 +2,7 @@
 (setf asdf:*central-registry* '("~/work/tcc/lisp/"))
 (asdf:load-system 'dc)
 
+(clear)
 (setf *random-state* (make-random-state t))
 
 (set-title "Teste")
@@ -29,4 +30,4 @@
 (set-prob-fun 'line 6 (from-group "string"))
 (run-until *gen-line-list* 90)
 
-(print-score "~/work/tcc/tests/scotst.ly" *score*)
+(print-score "~/work/tcc/tests/scotst2.ly" *score*)

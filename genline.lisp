@@ -1,5 +1,5 @@
 (defvar *score*)
-(defvar *curr-time* 0)
+(defparameter *curr-time* 0)
 (defvar *curr-beat-n*)
 (defvar *curr-in-tuplet*)
 (defvar *curr-note*)
