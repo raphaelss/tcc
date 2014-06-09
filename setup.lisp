@@ -1,11 +1,5 @@
-(defparameter *score-title* "")
-(defparameter *score-subtitle* "")
-(defparameter *score-subsubtitle* "")
-
 (setf *score* (make-score
-               :title *score-title*
-               :subtitle *score-subtitle*
-               :subsubtitle *score-subsubtitle*
+               :title "" :subtitle "" :subsubtitle ""
                :spec
                '(("woodwind"
                   ("piccolo" "Piccolo" "Picc." piccolo)
@@ -47,6 +41,15 @@
                               20 21 22 23 24 25 26 27 28))
 
 (defparameter *dyn-all* (list 'ppp 'pp 'p 'mp 'mf 'f 'ff 'fff))
+
+(defun set-title (x)
+  (setf (title *score*) x))
+
+(defun set-subtitle (x)
+  (setf (subtitle *score*) x))
+
+(defun set-subsubtitle (x)
+  (setf (subsubtitle *score*) x))
 
 (defun pitches-from-root (root)
   (let ((root-pc (pc root))
