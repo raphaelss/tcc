@@ -112,6 +112,13 @@
   (make-instance 'note :pitch nil :dynamic nil
                  :base base :mult mult))
 
+(defun change-octave (note oct)
+  (let ((pc (pc (pitch note))))
+    (make-instance
+     'note :pitch (make-instance 'pitch :pc pc :octave oct)
+     :mult (mult note) :base (base note)
+     :dynamic (dynamic note))))
+
 (defun write-figure-in-tuplet (stream pc dyn base mult)
   (format stream (aref (aref *mult-tuplet* (- base 2)) (- mult 1))
           pc (dynamic-repr dyn) (if (equal pc "r") 1 0)))

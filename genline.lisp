@@ -79,6 +79,8 @@
                  (setf *curr-note* note *curr-beat-n* beat-n
                        *curr-in-tuplet* in-tuplet)
                  (step-dc (line gen-line)))))
+    (setf note (change-octave note (main-octave (instrument (score-get-line
+                                                             *score* line)))))
     (score-apply *score* line #'add-note note beat-n in-tuplet)
     (if (>= in-tuplet-sum base)
         (setf (beat-n gen-line) (+ beat-n (truncate dur base) 1)

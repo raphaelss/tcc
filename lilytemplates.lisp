@@ -124,7 +124,7 @@
 (defparameter *score-header* "#(set-global-staff-size 17)
 \\book {
   \\paper {
-    #(set-paper-size \"a3\" 'portrait)
+    #(set-paper-size \"a2\" 'portrait)
     indent = 3.0\\cm
     short-indent = 1.5\\cm
     %top-margin = 20\mm

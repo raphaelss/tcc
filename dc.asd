@@ -13,4 +13,5 @@
                (:file "score" :depends-on ("lilytemplates" "line"))
                (:file "disscounter")
                (:file "genline" :depends-on
-                      ("disscounter" "score" "note" "line"))))
+                      ("disscounter" "score" "note" "line"))
+               (:file "setup" :depends-on ("genline"))))
