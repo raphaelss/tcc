@@ -60,7 +60,7 @@
 
 (defun line-able-time (line base beat in-tuplet)
   (let ((line-beat (beat-n line))
-         (line-in-tuplet (in-tuplet line)))
+        (line-in-tuplet (in-tuplet line)))
     (or (= line-beat line-in-tuplet 0)
         (> beat line-beat)
         (and (= beat line-beat)

@@ -74,19 +74,44 @@
 (defun all-instr ()
   #'(lambda (label) (if (able-to-play label) 1 0)))
 
-(defun from-group (group-label)
+(defun instr-from-group (group-label)
   #'(lambda (label)
       (if (and (equal (search group-label label) 0) (able-to-play label)) 1 0)))
 
-(defun from-list (list)
+(defun instr-from-list (list)
   #'(lambda (label)
       (if (and (member label list :test #'equal) (able-to-play label)) 1 0)))
+
+(defun from-list (list)
+  #'(lambda (x)
+      (if (member x list :test #'equal) 1 0)))
+
+(defun decay-pos (pos n fun &key (list nil))
+  #'(lambda (x)
+      (if list
+          (if (member x list :test #'equal)
+              (* n (exp (- (* (funcall fun x) (abs (- *curr-time* pos))))))
+              0)
+          (* n (exp (- (* (funcall fun x) (abs (- *curr-time* pos)))))))))
+
+(defun map-range (x left-a left-b right-a right-b)
+  (+ right-a (/ (* (- x left-a) (- right-b right-a)) (- left-b left-a))))
+
+(defun interpolation (list1 list2 init end)
+  #'(lambda (x)
+      (let ((member1 (member x list1 :test #'equal))
+            (member2 (member x list2 :test #'equal)))
+        (cond ((and member1 member2) 1)
+              (member1 (map-range *curr-time* init end 1 0))
+              (member2 (map-range *curr-time* init end 0 1))
+              (t 0)))))
 
 (defvar *line*)
 (defvar *dyn*)
 (defvar *dur*)
 (defvar *pitch*)
 (defvar *chord-n*)
+(defvar *rest-n*)
 (defvar *gen-lines*)
 (defvar *gen-line-list*)
 
@@ -122,6 +147,8 @@
          (timed-dc *dyn-all*)))
 
   (setf *chord-n* (vector 1 1 1 1 1 1 1 1 1 1 1 1))
+
+  (setf *rest-n* (vector nil nil nil nil nil nil nil nil nil nil nil nil))
 
   (setf *dur*
         (vector
@@ -161,6 +188,8 @@
                                            :dur (aref *dur* i)
                                            :line (aref *line* i)
                                            :chord-n (aref *chord-n* i)
+                                           :rest-n nil
+                                           :rest-count nil
                                            :dynamic (aref *dyn* i)
                                            :pitch (aref *pitch* i))))
               (setf (aref *gen-lines* i) gen-line)
@@ -177,9 +206,15 @@
 (defun active-state (id bool)
   (setf (active (aref *gen-lines* id)) bool))
 
+(defun active-list (list)
+  (dotimes (i 12)
+    (active-state i (member i list :test #'=))))
+
 (defun set-dc (which id value)
   (setf (slot-value (aref *gen-lines* id) which) value)
   (case which
+    (rest-n (setf (aref *rest-n* id) value)
+            (setf (rest-count (aref *gen-lines* id)) nil))
     (chord-n (setf (aref *chord-n* id) value))
     (dynamic (setf (aref *dyn* id) value))
     (dur (setf (aref *dur* id) value))
@@ -188,6 +223,7 @@
 
 (defun set-prob-fun (which id f &optional (alpha 2))
   (case which
+    (rest-n (setf (prob-fun (aref *chord-n* id)) (wrap-dc-fun alpha f)))
     (chord-n (setf (prob-fun (aref *chord-n* id)) (wrap-dc-fun alpha f)))
     (dynamic (setf (prob-fun (aref *dyn* id)) (wrap-dc-fun alpha f)))
     (dur (setf (prob-fun (aref *dur* id)) (wrap-dc-fun alpha f)))

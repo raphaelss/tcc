@@ -122,9 +122,17 @@
 (defparameter *lily-version* "\\version \"2.18.2\"")
 (defparameter *lily-include* "\\include \"~a\"")
 (defparameter *score-header* "#(set-global-staff-size 17)
+global = {
+  \\key c \\major
+  \\numericTimeSignature
+  \\time 4/4
+  \\set Timing.beamExceptions = #'()
+  \\set Timing.baseMoment = #(ly:make-moment 1/4)
+  \\set Timing.beatStructure = #'(1 1 1 1)
+}
 \\book {
   \\paper {
-    #(set-paper-size \"a2\" 'portrait)
+    #(set-paper-size \"a3\" 'portrait)
     indent = 3.0\\cm
     short-indent = 1.5\\cm
     %top-margin = 20\mm
@@ -149,7 +157,9 @@
           \\set Staff.instrumentName = #\"~a\"
           \\set Staff.shortInstrumentName = #\"~a\"
           \\set Staff.midiInstrument = #\"~a\"
-          \\new Voice {~%            \\~a
+          \\new Voice {
+            \\global
+            \\~a
           }~%        }~%")
 
 (defparameter *line-file-header* "~a = {~%  \\clef ~a~%")
