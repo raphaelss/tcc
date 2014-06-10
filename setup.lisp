@@ -28,7 +28,10 @@
                     ("basstrombone" "Bass Trombone" "Bass Trmb." trombone)
                     ("tuba" "Tuba" "Tba." tuba))
                    ("solo"
-                    ("violin" "Solo Violin" "Solo Vln." violin-i))
+                    ("si" "Solo Violin" "Solo Vln." violin-i)
+                    ("siiv" "Solo Violin" "Solo Vln." violin-i)
+                    ("siii" "Solo Violin" "Solo Vln." violin-i)
+                    ("siv" "Solo Violin" "Solo Vln." violin-i))
                    ("string"
                     ("violinia" "Violin Ia" "Vln. Ia" violin-i)
                     ("violinib" "Violin Ib" "Vln. Ib" violin-i)
@@ -74,9 +77,11 @@
 (defun all-instr ()
   #'(lambda (label) (if (able-to-play label) 1 0)))
 
-(defun instr-from-group (group-label)
-  #'(lambda (label)
-      (if (and (equal (search group-label label) 0) (able-to-play label)) 1 0)))
+(defun instr-from-group (&rest list)
+ #'(lambda (label)
+     (if (some #'(lambda (group-label)
+                   (and (equal (search group-label label) 0)
+                        (able-to-play label))) list) 1 0)))
 
 (defun instr-from-list (list)
   #'(lambda (label)
@@ -87,11 +92,12 @@
       (if (member x list :test #'equal) 1 0)))
 
 (defun decay-pos (pos n fun &key (list nil))
-  #'(lambda (x)
-      (if list
+  (if list
+      #'(lambda (x)
           (if (member x list :test #'equal)
               (* n (exp (- (* (funcall fun x) (abs (- *curr-time* pos))))))
-              0)
+              0))
+      #'(lambda (x)
           (* n (exp (- (* (funcall fun x) (abs (- *curr-time* pos)))))))))
 
 (defun map-range (x left-a left-b right-a right-b)
