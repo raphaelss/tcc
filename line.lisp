@@ -25,7 +25,10 @@
     :accessor notes)))
 
 (defun last-base (line)
-  (base (car (notes line))))
+  (let ((notes (notes line)))
+    (if notes
+        (base (car notes))
+        2)))
 
 (defun last-beat (line)
   (let ((last-beat (* (floor (/ (+ (beat-n line) 3) 4)) 4)))
@@ -97,7 +100,8 @@
           (t (if (/= line-in-tuplet 0)
                  (let ((last-base (last-base line)))
                    (push-note-update-line
-                    line (make-rest last-base (- last-base line-in-tuplet)))))
+                    line (make-rest last-base (- last-base line-in-tuplet)))
+                   (setf line-beat (beat-n line))))
              (let ((beat-diff (+ (* base (- beat line-beat)) in-tuplet)))
                (push-note-update-line line (make-rest base beat-diff)))
              (push-note-update-line line note)))))

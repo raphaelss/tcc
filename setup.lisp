@@ -86,6 +86,7 @@
 (defvar *dyn*)
 (defvar *dur*)
 (defvar *pitch*)
+(defvar *chord-n*)
 (defvar *gen-lines*)
 (defvar *gen-line-list*)
 
@@ -119,6 +120,8 @@
          (timed-dc *dyn-all*)
          (timed-dc *dyn-all*)
          (timed-dc *dyn-all*)))
+
+  (setf *chord-n* (vector 1 1 1 1 1 1 1 1 1 1 1 1))
 
   (setf *dur*
         (vector
@@ -157,6 +160,7 @@
             (let ((gen-line (make-instance 'gen-line :base (+ (mod i 6) 2)
                                            :dur (aref *dur* i)
                                            :line (aref *line* i)
+                                           :chord-n (aref *chord-n* i)
                                            :dynamic (aref *dyn* i)
                                            :pitch (aref *pitch* i))))
               (setf (aref *gen-lines* i) gen-line)
@@ -176,6 +180,7 @@
 (defun set-dc (which id value)
   (setf (slot-value (aref *gen-lines* id) which) value)
   (case which
+    (chord-n (setf (aref *chord-n* id) value))
     (dynamic (setf (aref *dyn* id) value))
     (dur (setf (aref *dur* id) value))
     (pitch (setf (aref *pitch* id) value))
@@ -183,6 +188,7 @@
 
 (defun set-prob-fun (which id f &optional (alpha 2))
   (case which
+    (chord-n (setf (prob-fun (aref *chord-n* id)) (wrap-dc-fun alpha f)))
     (dynamic (setf (prob-fun (aref *dyn* id)) (wrap-dc-fun alpha f)))
     (dur (setf (prob-fun (aref *dur* id)) (wrap-dc-fun alpha f)))
     (pitch (setf (prob-fun (aref *pitch* id)) (wrap-dc-fun alpha f)))
