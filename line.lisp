@@ -27,6 +27,12 @@
 (defun last-base (line)
   (base (car (notes line))))
 
+(defun last-beat (line)
+  (let ((last-beat (* (floor (/ (+ (beat-n line) 3) 4)) 4)))
+    (if (and (= last-beat (beat-n line)) (/= (in-tuplet line) 0))
+        (+ last-beat 4)
+        last-beat)))
+
 (defun write-inline-line (stream line)
   (format stream *inline-line* (name line) (short-name line)
           (midi-instrument (instrument line)) (label line)))

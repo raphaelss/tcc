@@ -62,31 +62,34 @@
 
 (defun gen-line-step (gen-line)
   (update-curr-time gen-line)
-  (let* ((pitch (step-dc (pitch gen-line)))
-         (dur (step-dc (dur gen-line)))
-         (dyn (and pitch (step-dc (dynamic gen-line))))
-         (chord-n (and pitch (step-dc (chord-n gen-line))))
-         (base (base gen-line))
-         (in-tuplet (in-tuplet gen-line))
-         (in-tuplet-sum (+ in-tuplet (mod dur base)))
-         (beat-n (beat-n gen-line))
-         (note (make-instance
-                'note :pitch (if (and pitch (> chord-n 1))
-                                 (list pitch (step-dc (pitch gen-line)))
-                                 pitch)
-                :dynamic dyn :base base :mult dur))
-         (line (progn
-                 (setf *curr-note* note *curr-beat-n* beat-n
-                       *curr-in-tuplet* in-tuplet)
-                 (step-dc (line gen-line)))))
-    (setf note (change-octave note (main-octave (instrument (score-get-line
-                                                             *score* line)))))
-    (score-apply *score* line #'add-note note beat-n in-tuplet)
-    (if (>= in-tuplet-sum base)
-        (setf (beat-n gen-line) (+ beat-n (truncate dur base) 1)
-              (in-tuplet gen-line) (- in-tuplet-sum base))
-        (setf (beat-n gen-line) (+ beat-n (truncate dur base))
-              (in-tuplet gen-line) in-tuplet-sum))))
+  (restart-case
+      (let* ((pitch (step-dc (pitch gen-line)))
+             (dur (step-dc (dur gen-line)))
+             (dyn (and pitch (step-dc (dynamic gen-line))))
+             (chord-n (and pitch (step-dc (chord-n gen-line))))
+             (base (base gen-line))
+             (in-tuplet (in-tuplet gen-line))
+             (in-tuplet-sum (+ in-tuplet (mod dur base)))
+             (beat-n (beat-n gen-line))
+             (note (make-instance
+                    'note :pitch (if (and pitch (> chord-n 1))
+                                     (list pitch (step-dc (pitch gen-line)))
+                                     pitch)
+                    :dynamic dyn :base base :mult dur))
+             (line (progn
+                     (setf *curr-note* note *curr-beat-n* beat-n
+                           *curr-in-tuplet* in-tuplet)
+                     (step-dc (line gen-line)))))
+        (setf note (change-octave note (main-octave (instrument
+                                                     (score-get-line
+                                                      *score* line)))))
+        (score-apply *score* line #'add-note note beat-n in-tuplet)
+        (if (>= in-tuplet-sum base)
+            (setf (beat-n gen-line) (+ beat-n (truncate dur base) 1)
+                  (in-tuplet gen-line) (- in-tuplet-sum base))
+            (setf (beat-n gen-line) (+ beat-n (truncate dur base))
+                  (in-tuplet gen-line) in-tuplet-sum)))
+    (skip-note () nil)))
 
 (defun run-until (gen-lines until)
   (loop while (some #'(lambda (x) (< (beat-n x) until)) gen-lines) do

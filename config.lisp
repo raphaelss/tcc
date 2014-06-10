@@ -7,7 +7,7 @@
 
 (set-title "Teste")
 
-;;Sec x
+;;Sec 1
 (dotimes (i 12)
   (active-state i t))
 (run-until *gen-line-list* 60)

@@ -38,6 +38,7 @@
   (write-group-footer stream))
 
 (defun write-score-header (stream base-path score)
+  (fill-with-rests score)
   (format stream "~a~%~%" *lily-version*)
   (dolist (g (groups score))
     (dolist (line (lines g))
@@ -56,6 +57,19 @@
 
 (defun write-score-footer (stream)
   (format stream *score-footer*))
+
+(defun fill-with-rests (score)
+  (let ((last-beat (reduce #'max (groups score) :key
+                           #'(lambda (x)
+                               (reduce #'max (lines x) :key #'last-beat)))))
+    (dolist (g (groups score))
+      (dolist (l (lines g))
+        (let ((in-tuplet (in-tuplet l))
+              (base (last-base l))
+              (beat-n (beat-n l)))
+          (add-note l (make-rest base (+ (- base in-tuplet)
+                                         (* (- last-beat beat-n 1) base)))
+                    beat-n in-tuplet))))))
 
 (defun print-score (file-path score)
   (with-open-file (stream

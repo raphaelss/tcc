@@ -153,4 +153,4 @@
           }~%        }~%")
 
 (defparameter *line-file-header* "~a = {~%  \\clef ~a~%")
-(defparameter *line-file-footer* "}")
+(defparameter *line-file-footer* "  \\bar \"|.\"~%}")
