@@ -122,6 +122,7 @@
 (defparameter *lily-version* "\\version \"2.18.2\"")
 (defparameter *lily-include* "\\include \"~a\"")
 (defparameter *score-header* "#(set-global-staff-size 17)
+#(ly:set-option 'midi-extension \"mid\")
 global = {
   \\key c \\major
   \\numericTimeSignature

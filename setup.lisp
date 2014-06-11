@@ -29,9 +29,11 @@
                     ("tuba" "Tuba" "Tba." tuba))
                    ("solo"
                     ("si" "Solo Violin" "Solo Vln." violin-i)
-                    ("siiv" "Solo Violin" "Solo Vln." violin-i)
+                    ("sii" "Solo Violin" "Solo Vln." violin-i)
                     ("siii" "Solo Violin" "Solo Vln." violin-i)
-                    ("siv" "Solo Violin" "Solo Vln." violin-i))
+                    ("siv" "Solo Violin" "Solo Vln." violin-i)
+;                    ("sv" "Solo Violin" "Solo Vln." violin-i)
+;                    ("svi" "Solo Violin" "Solo Vln." violin-i))
                    ("string"
                     ("violinia" "Violin Ia" "Vln. Ia" violin-i)
                     ("violinib" "Violin Ib" "Vln. Ib" violin-i)
@@ -212,7 +214,7 @@
 (defun active-state (id bool)
   (setf (active (aref *gen-lines* id)) bool))
 
-(defun active-list (list)
+(defun active-list (&rest list)
   (dotimes (i 12)
     (active-state i (member i list :test #'=))))
 
