@@ -6,8 +6,9 @@
   :author "Raphael Santos <contact@raphaelss.com>"
   :license "MIT License"
   :components ((:file "lilytemplates")
-               (:file "note" :depends-on ("lilytemplates"))
-               (:file "instruments" :depends-on ("note"))
+               (:file "pitch" :depends-oon ("lilytemplates"))
+               (:file "note" :depends-on ("lilytemplates" "pitch"))
+               (:file "instruments" :depends-on ("pitch"))
                (:file "line" :depends-on
                       ("lilytemplates" "instruments" "note"))
                (:file "score" :depends-on ("lilytemplates" "line"))

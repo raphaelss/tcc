@@ -1,6 +1,4 @@
-(require 'asdf)
-(setf asdf:*central-registry* '("~/work/tcc/lisp/"))
-(asdf:load-system 'dc)
+(in-package #:tcc)
 
 (clear)
 (setf *random-state* (make-random-state t))
