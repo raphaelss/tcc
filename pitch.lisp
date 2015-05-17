@@ -1,18 +1,29 @@
 (in-package #:tcc)
 
+(defvar *pc-name-vec* #("c" "des" "d" "ees" "e" "f" "ges"
+                        "g" "aes" "a" "bes" "b"))
+
 (defclass pitch ()
   ((pitch-class
     :initarg :pitch-class
     :initform 0
-    :accessor pitch-class)
+    :reader pitch-class
+    :type fixnum)
    (octave
     :initarg :octave
     :initform 4
-    :accessor octave)))
+    :accessor octave
+    :type fixnum)))
+
+(defmethod initialize-instance :after ((pitch pitch) &key)
+  (with-slots (pitch-class octave) pitch
+    (setf octave (+ octave
+                    (truncate pitch-class 12)
+                    (if (< pitch-class 0) -1 0))
+          pitch-class (mod pitch-class 12))))
 
 (defun make-pitch (pc &optional (oct 4))
-  (make-instance 'pitch :pitch-class (mod pc 12)
-                 :octave (+ oct (truncate pc 12) (if (< pc 0) -1 0))))
+  (make-instance 'pitch :pitch-class pc :octave oct))
 
 (defun pitch< (p1 p2)
   (let ((o1 (octave p1))
@@ -28,27 +39,18 @@
         (> (pitch-class p1) (pitch-class p2))
         (> o1 o2))))
 
-(defun pitch<= (p1 p2)
-  (let ((o1 (octave p1))
-        (o2 (octave p2)))
-    (if (= o1 o2)
-        (<= (pitch-class p1) (pitch-class p2))
-        (< o1 o2))))
-
-(defun pitch>= (p1 p2)
-  (let ((o1 (octave p1))
-        (o2 (octave p2)))
-    (if (= o1 o2)
-        (>= (pitch-class p1) (pitch-class p2))
-        (> o1 o2))))
-
 (defun pitch= (p1 p2)
   (and (= (pitch-class p1) (pitch-class p2))
        (= (octave p1) (octave p2))))
 
+(defun pitch<= (p1 p2)
+  (or (pitch< p1 p2) (pitch= p1 p2)))
+
+(defun pitch>= (p1 p2)
+  (or (pitch> p1 p2) (pitch= p1 p2)))
+
 (defun pitch/= (p1 p2)
-  (or (/= (pitch-class p1) (pitch-class p2))
-      (/= (octave p1) (octave p2))))
+  (not (pitch= p1 p2)))
 
 (defun pitch-in-range (p p1 p2)
   (or (and (pitch>= p p1) (pitch<= p p2))

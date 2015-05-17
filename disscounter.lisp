@@ -1,4 +1,4 @@
-o(defpackage #:diss-counter
+(defpackage #:diss-counter
   (:use :cl)
   (:export #:make #:next))
 

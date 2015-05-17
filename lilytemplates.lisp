@@ -8,8 +8,6 @@
 (defun max-mult (div)
   (* 4 div))
 
-(defparameter *pc-name-vec* #("c" "des" "d" "ees" "e" "f" "ges"
-                              "g" "aes" "a" "bes" "b"))
 (defparameter *mult-tuplet* #(#("~a8~a") ;2
                               #("~a8~a" "~a4~a") ;3
                               #("~a16~a" "~a8~a" "~a8.~a") ;4

@@ -1,15 +1,7 @@
 (in-package #:tcc)
 
-(defclass note ()
-  ((pitch
-    :initarg :pitch
-    :initform (make-instance 'pitch)
-    :accessor pitch)
-   (dynamic
-    :initarg :dynamic
-    :initform 'mf
-    :accessor dynamic)
-   (mult
+(defclass duration ()
+  ((mult
     :initarg :mult
     :initform 1
     :accessor mult)
@@ -17,6 +9,12 @@
     :initarg :base
     :initform 2
     :accessor base)))
+
+(defclass note (duration pitch)
+  ((dynamic
+    :initarg :dynamic
+    :initform nil
+    :accessor dynamic)))
 
 (defun gen-pitch-repr (x)
   (cond ((consp x)
@@ -42,11 +40,7 @@
                  :base base :mult mult))
 
 (defun change-octave (note oct)
-  (let ((pc (pitch-class (pitch note))))
-    (make-instance
-     'note :pitch (make-instance 'pitch :pc pc :octave oct)
-     :mult (mult note) :base (base note)
-     :dynamic (dynamic note))))
+  (setf (octave note) oct))
 
 (defun write-figure-in-tuplet (stream pc dyn base mult)
   (format stream (aref (aref *mult-tuplet* (- base 2)) (- mult 1))
