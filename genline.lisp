@@ -123,7 +123,7 @@
   #'(lambda (x count) (* (expt count alpha) (funcall fun x))))
 
 (defun timed-dc (elems &optional (alpha 2) (fun (constantly 1)))
-  (make-instance 'diss-counter :elems elems :prob-fun (wrap-dc-fun alpha fun)))
+  (make-instance 'diss-counter::diss-counter :elems elems :prob-fun (wrap-dc-fun alpha fun)))
 
 (defun gen-line (&key base pitch dynamic duration chord-n line)
   (make-instance 'gen-line :base base :pitch pitch :dynamic dynamic

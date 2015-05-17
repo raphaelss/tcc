@@ -116,4 +116,4 @@
       (set-prob-fun 'line i (minus-solo))))
 (run-until *gen-line-list* 600)
 
-(print-score "~/work/tcc/tests/scotst3.ly" *score*)
+(print-score "~/work/tcc/tests/scotst5.ly" *score*)

@@ -1,3 +1,5 @@
+(in-package #:tcc)
+
 (defun start-score ()
   (setf *score* (make-score
                  :title "" :subtitle "" :subsubtitle ""
@@ -62,15 +64,15 @@
   (setf (subsubtitle *score*) x))
 
 (defun pitches-from-root (root)
-  (let ((root-pc (pc root))
+  (let ((root-pc (pitch-class root))
         (root-oct (octave root)))
     (list root
-          (make-instance 'pitch :pc (+ root-pc 7) :octave (1+ root-oct))
-          (make-instance 'pitch :pc (+ root-pc 4) :octave (+ root-oct 2))
-          (make-instance 'pitch :pc (+ root-pc 10) :octave (+ root-oct 2))
-          (make-instance 'pitch :pc (+ root-pc 2) :octave (+ root-oct 3))
-          (make-instance 'pitch :pc (+ root-pc 6) :octave (+ root-oct 3))
-          (make-instance 'pitch :pc (+ root-pc 8) :octave (+ root-oct 3)))))
+          (make-pitch (+ root-pc 7) (1+ root-oct))
+          (make-pitch (+ root-pc 4) (+ root-oct 2))
+          (make-pitch (+ root-pc 10) (+ root-oct 2))
+          (make-pitch (+ root-pc 2) (+ root-oct 3))
+          (make-pitch (+ root-pc 6) (+ root-oct 3))
+          (make-pitch (+ root-pc 8) (+ root-oct 3)))))
 
 (defun minus-solo ()
   #'(lambda (label) (if (and (not (search "solo" label))
@@ -175,18 +177,18 @@
 
   (setf *pitch*
         (vector
-         (timed-dc (pitches-from-root (make-pitch '(0 . 1))))
-         (timed-dc (pitches-from-root (make-pitch '(1 . 2))))
-         (timed-dc (pitches-from-root (make-pitch '(2 . 1))))
-         (timed-dc (pitches-from-root (make-pitch '(3 . 2))))
-         (timed-dc (pitches-from-root (make-pitch '(4 . 1))))
-         (timed-dc (pitches-from-root (make-pitch '(5 . 2))))
-         (timed-dc (pitches-from-root (make-pitch '(6 . 1))))
-         (timed-dc (pitches-from-root (make-pitch '(7 . 2))))
-         (timed-dc (pitches-from-root (make-pitch '(8 . 1))))
-         (timed-dc (pitches-from-root (make-pitch '(9 . 2))))
-         (timed-dc (pitches-from-root (make-pitch '(10 . 1))))
-         (timed-dc (pitches-from-root (make-pitch '(11 . 2))))))
+         (timed-dc (pitches-from-root (make-pitch 0 1)))
+         (timed-dc (pitches-from-root (make-pitch 1 2)))
+         (timed-dc (pitches-from-root (make-pitch 2 1)))
+         (timed-dc (pitches-from-root (make-pitch 3 2)))
+         (timed-dc (pitches-from-root (make-pitch 4 1)))
+         (timed-dc (pitches-from-root (make-pitch 5 2)))
+         (timed-dc (pitches-from-root (make-pitch 6 1)))
+         (timed-dc (pitches-from-root (make-pitch 7 2)))
+         (timed-dc (pitches-from-root (make-pitch 8 1)))
+         (timed-dc (pitches-from-root (make-pitch 9 2)))
+         (timed-dc (pitches-from-root (make-pitch 10 1)))
+         (timed-dc (pitches-from-root (make-pitch 11 2)))))
 
   (setf *gen-lines* (make-array 12))
   (setf *gen-line-list*
@@ -231,9 +233,15 @@
 
 (defun set-prob-fun (which id f &optional (alpha 2))
   (case which
-    (rest-n (setf (prob-fun (aref *chord-n* id)) (wrap-dc-fun alpha f)))
-    (chord-n (setf (prob-fun (aref *chord-n* id)) (wrap-dc-fun alpha f)))
-    (dynamic (setf (prob-fun (aref *dyn* id)) (wrap-dc-fun alpha f)))
-    (dur (setf (prob-fun (aref *dur* id)) (wrap-dc-fun alpha f)))
-    (pitch (setf (prob-fun (aref *pitch* id)) (wrap-dc-fun alpha f)))
-    (line (setf (prob-fun (aref *line* id)) (wrap-dc-fun alpha f)))))
+    (rest-n (setf (diss-counter::prob-fun (aref *chord-n* id))
+                  (wrap-dc-fun alpha f)))
+    (chord-n (setf (diss-counter::prob-fun (aref *chord-n* id))
+                   (wrap-dc-fun alpha f)))
+    (dynamic (setf (diss-counter::prob-fun (aref *dyn* id))
+                   (wrap-dc-fun alpha f)))
+    (dur (setf (diss-counter::prob-fun (aref *dur* id))
+               (wrap-dc-fun alpha f)))
+    (pitch (setf (diss-counter::prob-fun (aref *pitch* id))
+                 (wrap-dc-fun alpha f)))
+    (line (setf (diss-counter::prob-fun (aref *line* id))
+                (wrap-dc-fun alpha f)))))
