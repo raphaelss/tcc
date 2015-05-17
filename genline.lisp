@@ -1,3 +1,5 @@
+(in-package #:tcc)
+
 (defvar *score*)
 (defparameter *curr-time* 0)
 (defvar *curr-beat-n*)
@@ -47,7 +49,11 @@
    (in-tuplet
     :initarg :in-tuplet
     :initform 0
-    :accessor in-tuplet)))
+    :accessor in-tuplet)
+   (octave
+    :initarg :octave
+    :initform nil
+    :accessor octave)))
 
 (defun abs-time (gen-line)
   (+ (beat-n gen-line) (/ (in-tuplet gen-line) (base gen-line))))
@@ -65,7 +71,7 @@
 
 (defun step-dc (obj)
   (if (eq (type-of obj) 'diss-counter)
-      (next obj)
+      (diss-counter:next obj)
       obj))
 
 (defun gen-line-step (gen-line)

@@ -1,8 +1,10 @@
+(in-package #:tcc)
+
 (defclass pitch ()
-  ((pc
-    :initarg :pc
+  ((pitch-class
+    :initarg :pitch-class
     :initform 0
-    :accessor pc)
+    :accessor pitch-class)
    (octave
     :initarg :octave
     :initform 4
@@ -26,61 +28,52 @@
     :initform 2
     :accessor base)))
 
-(defmethod initialize-instance :after ((p pitch) &key)
-  (let ((pc (pc p)))
-    (setf (pc p) (mod pc 12))
-    (loop with i = pc while (>= i 12) do
-         (incf (octave p))
-         (decf i 12))
-    (loop with i = pc while (< i 0) do
-         (decf (octave p))
-         (incf i 12))))
-
-(defun make-pitch (pc-oct)
-  (let ((pc (car pc-oct))
-        (oct (cdr pc-oct)))
-    (make-instance 'pitch :pc pc :octave oct)))
+(defun make-pitch (pc &optional (oct 4))
+  (make-instance 'pitch :pitch-class (mod pc 12)
+                 :octave (+ oct (truncate pc 12) (if (< pc 0) -1 0))))
 
 (defun pitch< (p1 p2)
   (let ((o1 (octave p1))
         (o2 (octave p2)))
     (if (= o1 o2)
-        (< (pc p1) (pc p2))
+        (< (pitch-class p1) (pitch-class p2))
         (< o1 o2))))
 
 (defun pitch> (p1 p2)
   (let ((o1 (octave p1))
         (o2 (octave p2)))
     (if (= o1 o2)
-        (> (pc p1) (pc p2))
+        (> (pitch-class p1) (pitch-class p2))
         (> o1 o2))))
 
 (defun pitch<= (p1 p2)
   (let ((o1 (octave p1))
         (o2 (octave p2)))
     (if (= o1 o2)
-        (<= (pc p1) (pc p2))
+        (<= (pitch-class p1) (pitch-class p2))
         (< o1 o2))))
 
 (defun pitch>= (p1 p2)
   (let ((o1 (octave p1))
         (o2 (octave p2)))
     (if (= o1 o2)
-        (>= (pc p1) (pc p2))
+        (>= (pitch-class p1) (pitch-class p2))
         (> o1 o2))))
 
 (defun pitch= (p1 p2)
-  (and (= (pc p1) (pc p2)) (= (octave p1) (octave p2))))
+  (and (= (pitch-class p1) (pitch-class p2))
+       (= (octave p1) (octave p2))))
 
 (defun pitch/= (p1 p2)
-  (or (/= (pc p1) (pc p2)) (/= (octave p1) (octave p2))))
+  (or (/= (pitch-class p1) (pitch-class p2))
+      (/= (octave p1) (octave p2))))
 
 (defun pitch-in-range (p p1 p2)
   (or (and (pitch>= p p1) (pitch<= p p2))
       (and (pitch>= p p2) (pitch<= p p1))))
 
 (defun pitch-repr (x)
-  (let ((pc-name (aref *pc-name-vec* (pc x)))
+  (let ((pc-name (aref *pc-name-vec* (pitch-class x)))
         (oct (octave x)))
     (format nil "~A~A" pc-name
             (if (> oct 3)
@@ -113,7 +106,7 @@
                  :base base :mult mult))
 
 (defun change-octave (note oct)
-  (let ((pc (pc (pitch note))))
+  (let ((pc (pitch-class (pitch note))))
     (make-instance
      'note :pitch (make-instance 'pitch :pc pc :octave oct)
      :mult (mult note) :base (base note)

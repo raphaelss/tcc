@@ -1,3 +1,5 @@
+(in-package #:tcc)
+
 (defclass score ()
   ((title
     :initarg :title
@@ -38,7 +40,6 @@
   (write-group-footer stream))
 
 (defun write-score-header (stream base-path score)
-  (fill-with-rests score)
   (format stream "~a~%~%" *lily-version*)
   (dolist (g (groups score))
     (dolist (line (lines g))
@@ -72,6 +73,7 @@
                     beat-n in-tuplet))))))
 
 (defun print-score (file-path score)
+  (fill-with-rests score)
   (with-open-file (stream
                    file-path
                    :direction :output
@@ -96,7 +98,7 @@
                                :name (cadr line-spec)
                                :short-name (caddr line-spec)
                                :instrument (gethash (cadddr line-spec)
-                                                    *instrument-table*))
+                                                    *instrument-db*))
                 lines))
         (setf (lines g) (nreverse lines))
         (push g groups)))

@@ -1,36 +1,66 @@
+(defpackage #:diss-counter
+  (:use :cl)
+  (:export #:make #:next))
+
+(in-package #:diss-counter)
+
 (defclass diss-counter ()
   ((elems
     :initarg :elems
     :accessor elems)
    (prob-fun
     :initarg :prob-fun
-    :initform (lambda (x count) (declare (ignore x)) (* count count))
-    :accessor prob-fun)))
+    :accessor prob-fun)
+   (prob-sum
+    :initarg :prob-sum
+    :accessor prob-sum)))
 
-(defmethod initialize-instance :after ((dc diss-counter) &key)
-  (setf (elems dc) (mapcar #'(lambda (x) (list x 1 1)) (elems dc))))
+(defstruct entry
+  elem
+  count
+  prob)
 
-(defun weighted-choice (dc)
-  (let ((sum 0)
-        (elems (elems dc)))
-    (mapcar #'(lambda (e)
-                 (incf sum (setf (caddr e)
-                                 (funcall (prob-fun dc) (car e) (cadr e)))))
-             elems)
-    (let ((r (random sum))
-          (chosen nil))
-      (mapcar #'(lambda (e)
-                  (decf r (caddr e))
-                  (when (and (< r 0) (not chosen))
-                    (setf chosen (car e))))
-              elems)
-      chosen)))
+(defun power-fun (x count)
+  (declare (ignore x))
+  (* count count))
+
+(defun make (elems &key (prob-fun #'power-fun) (initial-count 1))
+  (let* ((size (length elems))
+         (table (make-array size :initial-contents elems))
+         (sum 0))
+    (dotimes (i size)
+      (let* ((x (svref table i))
+             (prob (funcall prob-fun x 1)))
+        (incf sum prob)
+        (setf (svref table i)
+              (make-entry :elem x :count initial-count :prob prob))))
+    (make-instance 'diss-counter :elems table :prob-fun prob-fun
+                   :prob-sum sum)))
+
+(defun entry-increase (entry f)
+  (incf (entry-count entry))
+  (setf (entry-prob entry)
+        (funcall f (entry-elem entry) (entry-count entry))))
+
+(defun entry-zero (entry f)
+  (setf (entry-count entry) 0
+        (entry-prob entry)
+        (funcall f (entry-elem entry) 0)))
 
 (defun next (dc)
-  (let ((chosen (weighted-choice dc)))
-    (mapcar #'(lambda (e)
-                (if (equal (car e) chosen)
-                    (setf (cadr e) 0)
-                    (incf (cadr e))))
-            (elems dc))
-    chosen))
+  (with-slots (elems prob-fun prob-sum) dc
+    (let ((r (random prob-sum))
+          (chosen nil))
+      (setf prob-sum 0)
+      (dotimes (i (length elems))
+        (let ((entry (svref elems i)))
+          (incf prob-sum
+                (cond
+                  (chosen
+                   (entry-increase entry prob-fun))
+                  ((< (decf r (entry-prob entry)) 0)
+                   (setf chosen (entry-elem entry))
+                   (entry-zero entry prob-fun))
+                  (t
+                   (entry-increase entry prob-fun))))))
+      chosen)))

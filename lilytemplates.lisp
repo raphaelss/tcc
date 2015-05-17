@@ -1,4 +1,13 @@
+(defpackage #:tcc
+  (:use #:cl))
+
+(in-package #:tcc)
+
 (defparameter *max-mult* #((* 4 2) (* 4 3) (* 4 4) (* 4 5) (* 4 6) (* 4 7)))
+
+(defun max-mult (div)
+  (* 4 div))
+
 (defparameter *pc-name-vec* #("c" "des" "d" "ees" "e" "f" "ges"
                               "g" "aes" "a" "bes" "b"))
 (defparameter *mult-tuplet* #(#("~a8~a") ;2
@@ -121,7 +130,7 @@
 
 (defparameter *lily-version* "\\version \"2.18.2\"")
 (defparameter *lily-include* "\\include \"~a\"")
-(defparameter *score-header* "#(set-global-staff-size 17)
+(defparameter *score-header* "#(set-global-staff-size 14)
 #(ly:set-option 'midi-extension \"mid\")
 global = {
   \\key c \\major
@@ -130,16 +139,45 @@ global = {
   \\set Timing.beamExceptions = #'()
   \\set Timing.baseMoment = #(ly:make-moment 1/4)
   \\set Timing.beatStructure = #'(1 1 1 1)
+  \\set Score.markFormatter = #format-mark-box-alphabet
+  \\override Score.RehearsalMark #'font-size = 6
+  \\override Score.RehearsalMark #'outside-staff-priority = #1800
+  \\override Score.RehearsalMark #'padding = #2
+  \\override Score.BarNumber #'outside-staff-priority = #1400
+  \\override Score.BarNumber #'padding = #4
+  \\override Score.BarNumber #'X-offset = #1
+  \\override Score.BarNumber #'Y-offset = #5
+  \\override Score.BarNumber #'break-visibility = #end-of-line-invisible
+  \\set Score.barNumberVisibility = #(every-nth-bar-number-visible 5)
+  \\override Score.BarNumber #'font-size = #1
+  \\override Score.BarNumber #'stencil
+  = #(make-stencil-boxer 0.1 0.25 ly:text-interface::print)
 }
 \\book {
   \\paper {
-    #(set-paper-size \"a3\" 'portrait)
+    #(set-paper-size \"a2\" 'portrait)
     indent = 3.0\\cm
     short-indent = 1.5\\cm
-    %top-margin = 20\mm
-    %bottom-margin = 20\mm
-    %left-margin = 25\mm
-    %right-margin = 20\mm
+    %top-margin = 20\\mm
+    %bottom-margin = 20\\mm
+    %left-margin = 25\\mm
+    %right-margin = 20\\mm
+    oddHeaderMarkup = \\markup \"\"
+    evenHeaderMarkup = \\markup \"\"
+    oddFooterMarkup = \\markup {
+      \\fill-line {
+        \\fontsize #3
+        \\on-the-fly #print-page-number-check-first
+        \\fromproperty #'page:page-number-string
+      }
+    }
+    evenFooterMarkup = \\markup {
+      \\fill-line {
+        \\fontsize #3
+        \\on-the-fly #print-page-number-check-first
+      \\fromproperty #'page:page-number-string
+      }
+    }
   }
   \\header {
     title = \"~a\"

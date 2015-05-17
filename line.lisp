@@ -1,3 +1,5 @@
+(in-package #:tcc)
+
 (defclass line ()
   ((label
     :initarg :label

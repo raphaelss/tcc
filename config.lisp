@@ -108,7 +108,7 @@
   (set-prob-fun 'line i (instr-from-group "solo")))
 (run-until *gen-line-list* 570)
 
-;;Sec 11
+;;Sec 12
 (active-list 0 1 2 3 4 5 6 7 8 9 10 11)
 (dotimes (i 12)
   (if (oddp i)
